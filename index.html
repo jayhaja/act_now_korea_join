@@ -19,28 +19,27 @@
     }
 
     // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
-    function loginWithKakao() {
-      console.log('loginWithKakao function called');
-      var options = {
-        scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
-        success: function(authObj) {
-          console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 사용자 정보 조회
-          Kakao.API.request({
-            url: '/v2/user/me',
-            success: function(res) {
-              console.log("사용자 정보:", res);
-              document.getElementById('result').innerHTML = "가입이 완료되었습니다.";
-            },
-            fail: function(error) {
-              console.error("사용자 정보 요청 실패:", error);
-            }
-          });
-        },
-        fail: function(err) {
-          console.error("로그인/간편가입 실패:", err);
-        }
-      };
+  function loginWithKakao() {
+    var options = {
+      redirectUri: 'https://jayhaja.github.io/act_now_korea_join', // 등록한 Redirect URI 중 하나
+      scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
+      success: function(authObj) {
+        console.log("로그인/간편가입 성공:", authObj);
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function(res) {
+            console.log("사용자 정보:", res);
+            document.getElementById('result').innerHTML = "가입이 완료되었습니다.";
+          },
+          fail: function(error) {
+            console.error("사용자 정보 요청 실패:", error);
+          }
+        });
+      },
+      fail: function(err) {
+        console.error("로그인/간편가입 실패:", err);
+      }
+    };
 
       // 네이티브 로그인(throughTalk) 옵션 제거하여 웹 기반 간편가입을 유도합니다.
       // 만약 모바일 기기에서도 웹 기반으로 진행하려면 아래 코드를 주석 처리합니다.
