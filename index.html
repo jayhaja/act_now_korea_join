@@ -25,7 +25,7 @@
         // 요청 동의 항목 – 카카오 싱크에서 간편가입 화면에 표시할 동의 항목은
         // Kakao Developers 콘솔에서 설정한 항목에 따라 달라집니다.
         // 예: 프로필 정보, 이메일, 성별 등
-        scope: 'profile_nickname, profile_image, account_email, account_gender, account_age_range, account_birthyear, account_phone_number',
+        scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
           // 로그인 성공 후 추가 처리 (예: 사용자 정보 요청)
