@@ -2,14 +2,14 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입</title>
+  <title>카카오 간편가입 예제</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // 실제 JavaScript 키로 교체
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); 
-    
-    // 모바일 기기 감지 함수 (네이티브 앱 로그인용)
+    // Kakao SDK 초기화 (실제 JavaScript 키로 교체)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
+
+    // (선택) 모바일 감지 함수
     function isMobile() {
       return /Mobi|Android/i.test(navigator.userAgent);
     }
@@ -20,26 +20,14 @@
         scope: 'profile_nickname, profile_image, account_email',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 사용자 정보 요청
-          Kakao.API.request({
-            url: '/v2/user/me',
-            success: function(res) {
-              console.log("사용자 정보:", res);
-              var nickname = res.kakao_account.profile.nickname;
-              document.getElementById('userInfo').innerText 
-                = "안녕하세요, " + nickname + "님!";
-            },
-            fail: function(error) {
-              console.error("사용자 정보 요청 실패:", error);
-            }
-          });
+          // 로그인 성공 후 사용자 정보 요청(필요 시)
         },
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
       };
-
-      // 모바일 환경이면 네이티브 로그인 시도
+      
+      // 모바일 환경이면 카카오톡 앱 로그인 시도
       if (isMobile()) {
         options.throughTalk = true;
       }
@@ -49,7 +37,21 @@
   </script>
 
   <style>
-    /* 버튼 스타일 */
+    /* 전체 페이지 기본 스타일 */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* body에 가로 중앙 정렬을 적용 */
+    body {
+      text-align: center; /* 가로 중앙 정렬 */
+      background: #f4f4f4; /* 임의 배경색 (선택) */
+    }
+
+    /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
       background-color: #FEE500; /* 카카오 노란색 */
       border: none;
@@ -59,27 +61,24 @@
       font-size: 14px;
       padding: 10px 20px;
       cursor: pointer;
-      display: inline-flex;
-      align-items: center;
+      display: inline-flex;    /* 로고와 텍스트를 한 줄로 배치 */
+      align-items: center;     /* 수직 가운데 정렬 */
+      margin-top: 40px;        /* 상단 여백 조절: 필요에 따라 값 변경 */
     }
+
+    /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
-      height: 24px;   /* 아이콘 크기 조절 */
-      margin-right: 8px;
+      height: 24px;      /* 로고 크기 조절 */
+      margin-right: 8px; /* 로고와 텍스트 간격 */
     }
   </style>
 </head>
 <body>
-
-  <!-- 
-    1) 여기에 카카오 채널 아이콘 등 원하는 이미지를 사용하세요.
-    2) 이미지 파일을 깃허브 저장소에 업로드하고, 그 raw URL을 src로 넣으면 됩니다.
-    예: <img src="https://raw.githubusercontent.com/내계정/내저장소/브랜치/경로/kakao_ch_icon.png">
-  -->
+  <!-- 상단 중앙에 위치한 카카오 간편가입 버튼 -->
   <button id="kakaoSignupBtn" onclick="loginWithKakao()">
-    <img src="https://github.com/jayhaja/act_now_korea_join/blob/main/unnamed.png?raw=true" alt="카카오 아이콘">
+    <!-- 사용자가 제공한 GitHub 이미지 URL -->
+    <img src="https://github.com/jayhaja/act_now_korea_join/blob/main/unnamed.png?raw=true" alt="카카오 로고">
     카카오 간편가입
   </button>
-
-  <div id="userInfo" style="margin-top: 20px;"></div>
 </body>
 </html>
