@@ -2,33 +2,32 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-
-  <!-- Kakao JavaScript SDK 로드 -->
+  <title>카카오 간편가입 예제</title>
+  <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // Kakao SDK 초기화 (실제 발급받은 JavaScript 키로 교체)
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
-
-    // 모바일 기기 감지 함수
+    // 실제 JavaScript 키로 교체
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); 
+    
+    // 모바일 기기 감지 함수 (네이티브 앱 로그인용)
     function isMobile() {
       return /Mobi|Android/i.test(navigator.userAgent);
     }
 
-    // 카카오 로그인(및 간편가입) 함수
+    // 카카오 로그인/간편가입 함수
     function loginWithKakao() {
       var options = {
-        // 필요한 동의 항목을 추가하세요.
-        // 간편가입을 위해 프로필 정보, 이메일 등 동의를 요청할 수 있습니다.
         scope: 'profile_nickname, profile_image, account_email',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 사용자 정보 요청
+          // 사용자 정보 요청
           Kakao.API.request({
             url: '/v2/user/me',
             success: function(res) {
               console.log("사용자 정보:", res);
               var nickname = res.kakao_account.profile.nickname;
-              document.getElementById('userInfo').innerText = "안녕하세요, " + nickname + "님!";
+              document.getElementById('userInfo').innerText 
+                = "안녕하세요, " + nickname + "님!";
             },
             fail: function(error) {
               console.error("사용자 정보 요청 실패:", error);
@@ -40,7 +39,7 @@
         }
       };
 
-      // 모바일 환경이면 카카오톡 앱을 통한 네이티브 로그인 시도
+      // 모바일 환경이면 네이티브 로그인 시도
       if (isMobile()) {
         options.throughTalk = true;
       }
@@ -48,11 +47,40 @@
       Kakao.Auth.login(options);
     }
   </script>
+
+  <style>
+    /* 버튼 스타일 */
+    #kakaoSignupBtn {
+      background-color: #FEE500; /* 카카오 노란색 */
+      border: none;
+      border-radius: 4px;
+      color: #000;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 10px 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+    #kakaoSignupBtn img {
+      height: 24px;   /* 아이콘 크기 조절 */
+      margin-right: 8px;
+    }
+  </style>
 </head>
 <body>
+  <h1>카카오 간편가입 예제</h1>
 
-  <!-- 사용자가 클릭하면 loginWithKakao() 함수가 실행됩니다 -->
-  <button onclick="loginWithKakao()">카카오 로그인/간편가입</button>
-  <div id="userInfo"></div>
+  <!-- 
+    1) 여기에 카카오 채널 아이콘 등 원하는 이미지를 사용하세요.
+    2) 이미지 파일을 깃허브 저장소에 업로드하고, 그 raw URL을 src로 넣으면 됩니다.
+    예: <img src="https://raw.githubusercontent.com/내계정/내저장소/브랜치/경로/kakao_ch_icon.png">
+  -->
+  <button id="kakaoSignupBtn" onclick="loginWithKakao()">
+    <img src="https://via.placeholder.com/24/000000/FFFFFF?text=ch" alt="카카오 아이콘">
+    카카오 간편가입
+  </button>
+
+  <div id="userInfo" style="margin-top: 20px;"></div>
 </body>
 </html>
