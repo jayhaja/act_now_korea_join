@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>카카오 로그인 및 채널 추가</title>
+  <!-- Kakao JavaScript SDK 로드 -->
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script>
+    // 본인의 JavaScript 키로 초기화 (Kakao Developers에서 발급받은 키)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); // 예시 키, 실제 키로 교체
+
+    // 카카오 로그인 함수 (팝업 방식)
+    function kakaoLogin() {
+      Kakao.Auth.login({
+        success: function(authObj) {
+          console.log("로그인 성공:", authObj);
+          // 사용자 정보 요청
+          Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              console.log("사용자 정보:", res);
+              // 로그인 성공 후 구글 사이트로 리다이렉트
+              window.location.href = "https://sites.google.com/view/actnowkorea/";
+            },
+            fail: function(error) {
+              console.error("사용자 정보 요청 실패:", error);
+            }
+          });
+        },
+        fail: function(err) {
+          console.error("로그인 실패:", err);
+        }
+      });
+    }
+
+    // 카카오톡 채널 추가 팝업 함수 (로그인 후 사용)
+    function showKakaoChannelPopup() {
+      Kakao.Channel.addChannel({
+        channelPublicId: '_Crxosn'  // 채널 URL (http://pf.kakao.com/_Crxosn)의 public id
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>카카오 로그인 및 채널 추가 예제</h1>
+  <!-- 카카오 로그인 버튼 -->
+  <button onclick="kakaoLogin()">카카오 로그인</button>
+  <!-- 로그인 후, 필요하다면 채널 추가 버튼도 노출 (원하는 경우) -->
+  <button onclick="showKakaoChannelPopup()">카카오톡 채널 추가하기</button>
+</body>
+</html>
