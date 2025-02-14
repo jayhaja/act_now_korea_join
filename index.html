@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입 예제</title>
+  <title>카카오 싱크 간편가입 & 채팅</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
@@ -10,7 +10,7 @@
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
     console.log('Kakao SDK initialized');
 
-    // 개선된 모바일 감지 함수
+    // 개선된 모바일 감지 함수 (User-Agent와 화면 너비 사용)
     function isMobile() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
@@ -20,53 +20,48 @@
 
     // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
     function loginWithKakao() {
+      console.log('loginWithKakao function called');
       var options = {
-        scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
+        scope: 'profile_nickname, profile_image, account_email, account_gender, account_age_range, account_birthyear, account_phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 추가 처리 (예: 사용자 정보 요청)
-          Kakao.API.request({
-            url: '/v2/user/me',
-            success: function(res) {
-              console.log("사용자 정보:", res);
-              // 이후 처리 (예: 회원 대시보드로 이동 등)
-            },
-            fail: function(error) {
-              console.error("사용자 정보 요청 실패:", error);
-            }
-          });
+          // 로그인 성공 후 채널 채팅창을 자동으로 엽니다.
+          openChannelChat();
         },
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
       };
 
-      // 모바일 기기라면 네이티브 로그인 시도 (옵션 적용)
+      // 모바일 기기라면 네이티브 로그인(throughTalk) 시도
       if (isMobile()) {
+        console.log('Mobile device detected');
         options.throughTalk = true;
+      } else {
+        console.log('Non-mobile device detected');
       }
       
       Kakao.Auth.login(options);
     }
 
-    // 로그인 상태를 체크하여 이미 로그인 되어 있으면 로그인 창을 띄우지 않는 함수
+    // 카카오 채널 채팅방 열기 함수
+    function openChannelChat() {
+      console.log("Opening channel chat...");
+      // channelPublicId는 카카오톡 채널의 Public ID로 교체해야 합니다.
+      Kakao.Channel.chat({
+        channelPublicId: '_Crxosn'
+      });
+    }
+
+    // 로그인 상태를 체크하여, 이미 로그인되어 있다면 채팅방을 바로 엽니다.
+    // 토큰이 없으면 로그인/간편가입 절차를 실행합니다.
     function checkLoginAndProceed() {
       var token = Kakao.Auth.getAccessToken();
       if (token) {
         console.log("이미 로그인된 상태입니다. Token:", token);
-        // 이미 로그인된 경우, 바로 사용자 정보 요청 등 후속 처리 실행
-        Kakao.API.request({
-          url: '/v2/user/me',
-          success: function(res) {
-            console.log("사용자 정보:", res);
-            // 예: 사용자 정보를 바탕으로 다음 페이지로 이동
-          },
-          fail: function(error) {
-            console.error("사용자 정보 요청 실패:", error);
-          }
-        });
+        // 이미 로그인된 경우 바로 채팅방을 엽니다.
+        openChannelChat();
       } else {
-        // 토큰이 없으면 로그인/간편가입 절차를 실행
         loginWithKakao();
       }
     }
@@ -78,7 +73,9 @@
       width: 100%;
       background: white;
       text-align: center;
+      font-family: sans-serif;
     }
+    /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
       background-color: #FEE500;
       border: none;
@@ -90,11 +87,12 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      margin-top: 0px;
+      margin-top: 20px;
     }
+    /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
       height: 24px;
-      margin-right: 0px;
+      margin-right: 8px;
     }
   </style>
 </head>
