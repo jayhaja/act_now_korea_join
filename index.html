@@ -2,15 +2,15 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입 예제</title>
+  <title>Kakao 간편가입 (JavaScript SDK)</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // 실제 발급받은 JavaScript 키로 Kakao SDK 초기화
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
+    // Kakao SDK 초기화: 네이티브 앱 키(또는 JavaScript 키)를 사용합니다.
+    Kakao.init('25a94ead8cc19727a665a0d9c1acdbc4');
     console.log('Kakao SDK initialized');
 
-    // 개선된 모바일 감지 함수 (User-Agent와 화면 너비 사용)
+    // 모바일 감지 함수 (선택 사항)
     function isMobile() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
@@ -20,16 +20,19 @@
 
     // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
     function loginWithKakao() {
-      var options = {
+      Kakao.Auth.login({
+        // 요청 동의 항목: 카카오 Developers 콘솔에서 미리 설정한 동의 항목이어야 합니다.
         scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 사용자 정보 요청
+          // 로그인 성공 후, 사용자 정보 조회
           Kakao.API.request({
             url: '/v2/user/me',
             success: function(res) {
               console.log("사용자 정보:", res);
-              // 후속 처리(예: 가입 축하 메시지 출력 등)를 추가할 수 있습니다.
+              // 여기서 가입 후 후속 처리를 진행합니다.
+              // 예: 가입 축하 메시지 표시, 사용자 정보 저장 등.
+              document.getElementById('result').innerHTML = "가입이 완료되었습니다.";
             },
             fail: function(error) {
               console.error("사용자 정보 요청 실패:", error);
@@ -39,39 +42,7 @@
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
-      };
-
-      // 모바일 기기라면 네이티브 로그인(throughTalk) 시도
-      if (isMobile()) {
-        console.log('Mobile device detected');
-        options.throughTalk = true;
-      } else {
-        console.log('Non-mobile device detected');
-      }
-      
-      Kakao.Auth.login(options);
-    }
-
-    // 로그인 상태를 체크하여, 이미 로그인되어 있으면 로그인 창 대신 메시지를 표시
-    function checkLoginAndProceed() {
-      var token = Kakao.Auth.getAccessToken();
-      if (token) {
-        console.log("이미 로그인된 상태입니다. Token:", token);
-        // 이미 로그인된 경우, 사용자 정보 요청 후 메시지 표시
-        Kakao.API.request({
-          url: '/v2/user/me',
-          success: function(res) {
-            console.log("사용자 정보:", res);
-            document.getElementById('userInfo').innerText = "이미 가입되어 있습니다. 카카오톡 채널을 확인해주세요.";
-          },
-          fail: function(error) {
-            console.error("사용자 정보 요청 실패:", error);
-          }
-        });
-      } else {
-        // 토큰이 없으면 로그인/간편가입 절차 실행
-        loginWithKakao();
-      }
+      });
     }
   </script>
   <style>
@@ -81,6 +52,7 @@
       width: 100%;
       background: white;
       text-align: center;
+      font-family: sans-serif;
     }
     /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
@@ -94,22 +66,22 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      margin-top: 0px;  /* margin-top 0 */
+      margin-top: 0px;
     }
     /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
       height: 24px;
-      margin-right: 0px; /* margin-right 0 */
+      margin-right: 0px;
     }
   </style>
 </head>
 <body>
-  <!-- 카카오 간편가입 버튼 (클릭 시 checkLoginAndProceed() 함수 호출) -->
-  <button id="kakaoSignupBtn" onclick="checkLoginAndProceed()">
+  <!-- 카카오 간편가입 버튼: 클릭 시 loginWithKakao() 함수 호출 -->
+  <button id="kakaoSignupBtn" onclick="loginWithKakao()">
     <img src="https://github.com/jayhaja/act_now_korea_join/raw/main/unnamed.png" alt="카카오 로고">
     카카오 간편가입
   </button>
-  <!-- 로그인 상태 또는 후속 메시지를 표시할 영역 -->
-  <div id="userInfo"></div>
+  <!-- 가입 완료 후 메시지나 후속 처리 결과를 표시할 영역 -->
+  <div id="result"></div>
 </body>
-</html> 
+</html>
