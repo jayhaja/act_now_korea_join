@@ -6,11 +6,11 @@
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // 실제 발급받은 JavaScript 키로 Kakao SDK 초기화
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); // 실제 키로 변경 필요
+    // 실제 발급받은 JavaScript 키로 초기화 (아래 키를 실제 키로 교체)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
     console.log('Kakao SDK initialized');
 
-    // 개선된 모바일 감지 함수
+    // 개선된 모바일 감지 함수 (User-Agent + 화면 너비)
     function isMobile() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
@@ -22,15 +22,16 @@
     function loginWithKakao() {
       console.log('loginWithKakao function called');
       var options = {
-        scope: 'profile_nickname, profile_image, account_email',
+        // 요청 동의 항목: 신규 사용자라면 간편가입 과정이 진행되어야 함.
+        scope: 'profile_nickname, profile_image, account_email, account_gender, account_age_range, account_birthyear, account_phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 추가 처리 (예: 사용자 정보 요청)
+          // 로그인 성공 후 사용자 정보 요청 (필요 시)
           Kakao.API.request({
             url: '/v2/user/me',
             success: function(res) {
               console.log("사용자 정보:", res);
-              // 추가로 필요한 처리를 여기에 작성할 수 있습니다.
+              // 예: 사용자 정보 처리 로직을 여기에 추가할 수 있습니다.
             },
             fail: function(error) {
               console.error("사용자 정보 요청 실패:", error);
@@ -64,7 +65,7 @@
     }
     /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
-      background-color: #FEE500;
+      background-color: #FEE500; /* 카카오 노란색 */
       border: none;
       border-radius: 4px;
       color: #000;
@@ -76,7 +77,7 @@
       align-items: center;
       margin-top: 0px; /* 필요에 따라 조정 */
     }
-    /* 버튼 내 로고 이미지 스타일 (로고 부분은 그대로 유지) */
+    /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
       height: 24px;
       margin-right: 8px;
