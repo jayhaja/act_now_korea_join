@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>카카오 탈퇴 기능 예제</title>
+  <!-- Kakao JavaScript SDK 불러오기 -->
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script>
+    // Kakao SDK 초기화 (JavaScript 키 사용)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
+    console.log('Kakao SDK initialized');
+
+    // 탈퇴(연결 해제) 함수
+    function unlinkKakao() {
+      // 사용자 확인
+      if (!confirm("정말 탈퇴하시겠습니까?")) {
+        return;
+      }
+      
+      Kakao.API.request({
+        url: '/v1/user/unlink',
+        method: 'POST',
+        success: function(response) {
+          console.log("탈퇴 성공:", response);
+          alert("탈퇴가 완료되었습니다.");
+          // 추가 후속 처리 (예: 로컬 스토리지, 세션 삭제, 페이지 리다이렉션 등)
+        },
+        fail: function(error) {
+          console.error("탈퇴 실패:", error);
+          alert("탈퇴에 실패했습니다. 다시 시도해주세요.");
+        }
+      });
+    }
+  </script>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: white;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    /* 탈퇴 버튼 스타일 */
+    #unlinkBtn {
+      background-color: #FF6F61; /* 붉은 색상 */
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 10px 20px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 탈퇴 버튼: 클릭 시 unlinkKakao() 함수 호출 -->
+  <button id="unlinkBtn" onclick="unlinkKakao()">탈퇴</button>
+</body>
+</html>
