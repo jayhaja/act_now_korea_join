@@ -62,7 +62,7 @@
           url: '/v2/user/me',
           success: function(res) {
             console.log("사용자 정보:", res);
-            document.getElementById('userInfo').innerText = "이미 가입되어 있습니다. <br> 카카오톡 채널을 확인해주세요.";
+            document.getElementById('userInfo').innerText = "이미 가입되어 있습니다. 카카오톡 채널을 확인해주세요.";
           },
           fail: function(error) {
             console.error("사용자 정보 요청 실패:", error);
