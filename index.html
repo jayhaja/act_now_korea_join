@@ -2,15 +2,15 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입 및 채널 홈 이동</title>
+  <title>카카오 간편가입 예제</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // 1. Kakao SDK 초기화 (실제 발급받은 자바스크립트 키로 교체)
+    // 실제 발급받은 JavaScript 키로 Kakao SDK 초기화
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
     console.log('Kakao SDK initialized');
 
-    // 2. 모바일 감지 함수 (User-Agent 및 화면 너비 사용)
+    // 개선된 모바일 감지 함수 (User-Agent와 화면 너비 사용)
     function isMobile() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
@@ -18,21 +18,30 @@
       return mobileRegex.test(userAgent) || isSmallScreen;
     }
 
-    // 3. 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
+    // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
     function loginWithKakao() {
       var options = {
         scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 채널 홈 페이지로 이동
-          goToChannelHome();
+          // 로그인 성공 후 사용자 정보 요청
+          Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              console.log("사용자 정보:", res);
+              // 후속 처리(예: 가입 축하 메시지 출력 등)를 추가할 수 있습니다.
+            },
+            fail: function(error) {
+              console.error("사용자 정보 요청 실패:", error);
+            }
+          });
         },
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
       };
 
-      // 모바일 기기인 경우 네이티브 로그인(throughTalk) 옵션 적용 (선택)
+      // 모바일 기기라면 네이티브 로그인(throughTalk) 시도
       if (isMobile()) {
         console.log('Mobile device detected');
         options.throughTalk = true;
@@ -43,19 +52,24 @@
       Kakao.Auth.login(options);
     }
 
-    // 4. 채널 홈으로 이동하는 함수 (HTTPS 사용)
-    function goToChannelHome() {
-      var channelHomeUrl = "https://pf.kakao.com/_Crxosn";
-      window.location.href = channelHomeUrl;
-    }
-
-    // 5. 로그인 상태 체크: 이미 로그인되었으면 바로 채널 홈으로 이동
+    // 로그인 상태를 체크하여, 이미 로그인되어 있으면 로그인 창 대신 메시지를 표시
     function checkLoginAndProceed() {
       var token = Kakao.Auth.getAccessToken();
       if (token) {
         console.log("이미 로그인된 상태입니다. Token:", token);
-        goToChannelHome();
+        // 이미 로그인된 경우, 사용자 정보 요청 후 메시지 표시
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function(res) {
+            console.log("사용자 정보:", res);
+            document.getElementById('userInfo').innerText = "이미 가입되어 있습니다. <br> 카카오톡 채널을 확인해주세요.";
+          },
+          fail: function(error) {
+            console.error("사용자 정보 요청 실패:", error);
+          }
+        });
       } else {
+        // 토큰이 없으면 로그인/간편가입 절차 실행
         loginWithKakao();
       }
     }
@@ -67,7 +81,6 @@
       width: 100%;
       background: white;
       text-align: center;
-      font-family: sans-serif;
     }
     /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
@@ -81,12 +94,12 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      margin-top: 0px;
+      margin-top: 0px;  /* margin-top 0 */
     }
     /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
       height: 24px;
-      margin-right: 0px;
+      margin-right: 0px; /* margin-right 0 */
     }
   </style>
 </head>
@@ -96,5 +109,7 @@
     <img src="https://github.com/jayhaja/act_now_korea_join/raw/main/unnamed.png" alt="카카오 로고">
     카카오 간편가입
   </button>
+  <!-- 로그인 상태 또는 후속 메시지를 표시할 영역 -->
+  <div id="userInfo"></div>
 </body>
-</html>
+</html> 
