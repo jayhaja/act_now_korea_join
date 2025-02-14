@@ -2,32 +2,63 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입 버튼</title>
+  <title>카카오 간편가입 예제</title>
+  <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
+    // Kakao SDK 초기화 (여기서 실제 발급받은 JavaScript 키로 교체)
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
+
+    // 개선된 모바일 감지 함수
+    function isMobile() {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
+      const isSmallScreen = window.innerWidth <= 768;
+      return mobileRegex.test(userAgent) || isSmallScreen;
+    }
+
+    // 카카오 로그인/간편가입 함수
     function loginWithKakao() {
       var options = {
         scope: 'profile_nickname, profile_image, account_email',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
+          // 로그인 성공 후 추가 처리 (예: 사용자 정보 요청)
+          Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              console.log("사용자 정보:", res);
+              // 추가로 필요한 처리를 여기에 작성할 수 있습니다.
+            },
+            fail: function(error) {
+              console.error("사용자 정보 요청 실패:", error);
+            }
+          });
         },
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
       };
+
+      // 모바일 기기라면 카카오톡 앱을 통한 네이티브 로그인 시도
+      if (isMobile()) {
+        options.throughTalk = true;
+      }
+      
       Kakao.Auth.login(options);
     }
   </script>
   <style>
+    /* 전체 페이지 기본 스타일 */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      background: #white;
+      background: white;
       text-align: center;
     }
+    /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
       background-color: #FEE500;
       border: none;
@@ -39,18 +70,12 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      margin-top: 0; /* 상단 여백 최소화 */
+      margin-top: 20px; /* 필요에 따라 조정 */
     }
+    /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
       height: 24px;
       margin-right: 8px;
     }
   </style>
-</head>
-<body>
-  <button id="kakaoSignupBtn" onclick="loginWithKakao()">
-    <img src="https://github.com/jayhaja/act_now_korea_join/blob/main/unnamed.png?raw=true" alt="카카오 로고">
-    카카오 간편가입
-  </button>
-</body>
-</html>
+</hea
