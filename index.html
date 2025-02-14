@@ -2,24 +2,25 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>자동 카카오 로그인 예제</title>
-  <!-- Kakao JavaScript SDK 불러오기 -->
+  <title>카카오 로그인 예제</title>
+  <!-- Kakao JavaScript SDK 로드 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
     // Kakao SDK 초기화 (실제 JavaScript 키로 교체)
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
-    
+
     // 모바일 기기 감지 함수
     function isMobile() {
       return /Mobi|Android/i.test(navigator.userAgent);
     }
-    
-    // 카카오 로그인 함수
+
+    // 카카오 로그인 함수 (버튼 클릭 시 실행)
     function loginWithKakao() {
       var options = {
         scope: 'profile_nickname, account_email',
         success: function(authObj) {
           console.log("로그인 성공:", authObj);
+          // 로그인 성공 후 사용자 정보 요청
           Kakao.API.request({
             url: '/v2/user/me',
             success: function(res) {
@@ -36,23 +37,20 @@
           console.error("로그인 실패:", err);
         }
       };
-      
-      // 모바일이면 네이티브 로그인 시도 옵션 추가
+
+      // 모바일 환경이면 카카오톡 앱을 통한 네이티브 로그인을 시도
       if (isMobile()) {
         options.throughTalk = true;
       }
       
       Kakao.Auth.login(options);
     }
-    
-    // 페이지 로드 시 자동으로 로그인 함수 호출
-    window.onload = function() {
-      loginWithKakao();
-    };
   </script>
 </head>
 <body>
-  <h1>자동 카카오 로그인 예제</h1>
+  <h1>카카오 로그인 예제</h1>
+  <!-- 사용자가 클릭하면 loginWithKakao() 함수가 실행됩니다 -->
+  <button onclick="loginWithKakao()">카카오 로그인</button>
   <div id="userInfo"></div>
 </body>
 </html>
