@@ -2,44 +2,68 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <!-- Kakao JavaScript SDK 불러오기 -->
+  <title>카카오 간편가입 예제</title>
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // Kakao SDK 초기화
-    // 반드시 'YOUR_JAVASCRIPT_KEY'를 카카오 개발자 콘솔에서 발급받은 실제 키로 교체하세요.
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
-
-    // 로그인 동의 창(팝업)을 띄우는 함수
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); 
+    function isMobile() {
+      return /Mobi|Android/i.test(navigator.userAgent);
+    }
     function loginWithKakao() {
-      Kakao.Auth.login({
-        // 동의 항목을 지정할 수 있습니다.
-        // 예: 'profile_nickname, account_email' 등 필요한 항목을 콤마로 구분하여 추가
-        scope: 'profile_nickname, account_email',
+      var options = {
+        scope: 'profile_nickname, profile_image, account_email',
         success: function(authObj) {
-          console.log("로그인 성공:", authObj);
-          // 로그인 성공 후 사용자 정보를 요청하여 콘솔에 출력하고 페이지에 표시합니다.
-          Kakao.API.request({
-            url: '/v2/user/me',
-            success: function(res) {
-              console.log("사용자 정보:", res);
-              var nickname = res.kakao_account.profile.nickname;
-              document.getElementById('userInfo').innerText = "안녕하세요, " + nickname + "님!";
-            },
-            fail: function(error) {
-              console.error("사용자 정보 요청 실패:", error);
-            }
-          });
+          console.log("로그인/간편가입 성공:", authObj);
+          // 필요 시 사용자 정보 요청/처리
         },
         fail: function(err) {
-          console.error("로그인 실패:", err);
+          console.error("로그인/간편가입 실패:", err);
         }
-      });
+      };
+      if (isMobile()) {
+        options.throughTalk = true;
+      }
+      Kakao.Auth.login(options);
     }
   </script>
+
+  <style>
+    /* 페이지 전체를 Flex 컨테이너로 설정하여 수직·수평 가운데 정렬 */
+    html, body {
+      margin: 0; 
+      padding: 0;
+      height: 100%; /* 부모 요소가 100% 높이를 가져야 flex 정렬이 중앙에 맞춰짐 */
+      display: flex;
+      justify-content: center; /* 가로 중앙 정렬 */
+      align-items: center;     /* 세로 중앙 정렬 */
+      background: #f4f4f4;     /* 임의 배경색 (선택) */
+    }
+
+    /* 버튼 스타일 */
+    #kakaoSignupBtn {
+      background-color: #FEE500; /* 카카오 노란색 */
+      border: none;
+      border-radius: 4px;
+      color: #000;
+      font-weight: bold;
+      font-size: 14px;
+      padding: 10px 20px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+    }
+    /* 로고 이미지 스타일 */
+    #kakaoSignupBtn img {
+      height: 24px;   /* 로고 크기 */
+      margin-right: 8px; /* 로고와 텍스트 간격 */
+    }
+  </style>
 </head>
 <body>
-  <!-- 사용자가 클릭하면 카카오 로그인 동의 팝업이 뜨게 됩니다 -->
-  <button onclick="loginWithKakao()">카카오 로그인</button>
-  <div id="userInfo"></div>
+  <!-- 가운데 정렬된 카카오 간편가입 버튼 -->
+  <button id="kakaoSignupBtn" onclick="loginWithKakao()">
+    <img src="https://via.placeholder.com/24/000000/FFFFFF?text=ch" alt="카카오 로고">
+    카카오 간편가입
+  </button>
 </body>
 </html>
