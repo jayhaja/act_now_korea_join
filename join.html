@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입 완료 - 카카오톡 채널 추가하기</title>
+  <!-- Kakao JavaScript SDK 불러오기 -->
+  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script>
+    // Kakao JavaScript SDK 초기화 (본인의 JavaScript 키 사용)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7');
+    
+    // 카카오톡 채널 추가 팝업을 띄우는 함수
+    function showKakaoChannelPopup() {
+      Kakao.Channel.addChannel({
+        channelPublicId: '_Crxosn'  // 채널 URL (http://pf.kakao.com/_Crxosn)의 public id
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>회원가입 완료!</h1>
+  <p>최신 소식과 이벤트 정보를 받아보시려면 아래 버튼을 눌러<br>카카오톡 채널 친구 추가를 진행해주세요.</p>
+  <button onclick="showKakaoChannelPopup()">카카오톡 채널 추가하기</button>
+</body>
+</html>
