@@ -10,7 +10,7 @@
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
     console.log('Kakao SDK initialized');
 
-    // 2. 개선된 모바일 감지 함수 (User-Agent 및 화면 너비 사용)
+    // 2. 모바일 감지 함수 (User-Agent 및 화면 너비 사용)
     function isMobile() {
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const mobileRegex = /(android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini)/i;
@@ -43,23 +43,19 @@
       Kakao.Auth.login(options);
     }
 
-    // 4. 채널 홈으로 이동하는 함수
+    // 4. 채널 홈으로 이동하는 함수 (HTTPS 사용)
     function goToChannelHome() {
-      // 카카오 채널 홈 URL (실제 채널 Public ID에 따라 변경)
-      var channelHomeUrl = "http://pf.kakao.com/_Crxosn";
-      // 웹 브라우저에서 해당 URL로 이동합니다.
+      var channelHomeUrl = "https://pf.kakao.com/_Crxosn";
       window.location.href = channelHomeUrl;
     }
 
-    // 5. 로그인 상태를 체크하고, 이미 로그인되어 있으면 바로 채널 홈으로 이동
+    // 5. 로그인 상태 체크: 이미 로그인되었으면 바로 채널 홈으로 이동
     function checkLoginAndProceed() {
       var token = Kakao.Auth.getAccessToken();
       if (token) {
         console.log("이미 로그인된 상태입니다. Token:", token);
-        // 이미 로그인된 경우, 바로 채널 홈으로 이동
         goToChannelHome();
       } else {
-        // 토큰이 없으면 로그인/간편가입 절차 실행
         loginWithKakao();
       }
     }
