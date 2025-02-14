@@ -2,24 +2,46 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>회원가입 완료 - 카카오톡 채널 추가하기</title>
+  <title>카카오 로그인 예제</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // Kakao JavaScript SDK 초기화 (본인의 JavaScript 키 사용)
+    // Kakao SDK 초기화
+    // 반드시 'YOUR_JAVASCRIPT_KEY'를 카카오 개발자 콘솔에서 발급받은 실제 키로 교체하세요.
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
-    
-    // 카카오톡 채널 추가 팝업을 띄우는 함수
-    function showKakaoChannelPopup() {
-      Kakao.Channel.addChannel({
-        channelPublicId: '_Crxosn'  // 채널 URL (http://pf.kakao.com/_Crxosn)의 public id
+
+    // 로그인 동의 창(팝업)을 띄우는 함수
+    function loginWithKakao() {
+      Kakao.Auth.login({
+        // 동의 항목을 지정할 수 있습니다.
+        // 예: 'profile_nickname, account_email' 등 필요한 항목을 콤마로 구분하여 추가
+        scope: 'profile_nickname, account_email',
+        success: function(authObj) {
+          console.log("로그인 성공:", authObj);
+          // 로그인 성공 후 사용자 정보를 요청하여 콘솔에 출력하고 페이지에 표시합니다.
+          Kakao.API.request({
+            url: '/v2/user/me',
+            success: function(res) {
+              console.log("사용자 정보:", res);
+              var nickname = res.kakao_account.profile.nickname;
+              document.getElementById('userInfo').innerText = "안녕하세요, " + nickname + "님!";
+            },
+            fail: function(error) {
+              console.error("사용자 정보 요청 실패:", error);
+            }
+          });
+        },
+        fail: function(err) {
+          console.error("로그인 실패:", err);
+        }
       });
     }
   </script>
 </head>
 <body>
-  <h1>회원가입 완료!</h1>
-  <p>최신 소식과 이벤트 정보를 받아보시려면 아래 버튼을 눌러<br>카카오톡 채널 친구 추가를 진행해주세요.</p>
-  <button onclick="showKakaoChannelPopup()">카카오톡 채널 추가하기</button>
+  <h1>카카오 로그인 예제</h1>
+  <!-- 사용자가 클릭하면 카카오 로그인 동의 팝업이 뜨게 됩니다 -->
+  <button onclick="loginWithKakao()">카카오 로그인</button>
+  <div id="userInfo"></div>
 </body>
 </html>
