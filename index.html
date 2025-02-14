@@ -2,58 +2,34 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 간편가입 예제</title>
-  <!-- Kakao JavaScript SDK 불러오기 -->
+  <title>카카오 간편가입 버튼</title>
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
-    // Kakao SDK 초기화 (실제 JavaScript 키로 교체)
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
-
-    // (선택) 모바일 감지 함수
-    function isMobile() {
-      return /Mobi|Android/i.test(navigator.userAgent);
-    }
-
-    // 카카오 로그인/간편가입 함수
     function loginWithKakao() {
       var options = {
         scope: 'profile_nickname, profile_image, account_email',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
-          // 로그인 성공 후 사용자 정보 요청(필요 시)
         },
         fail: function(err) {
           console.error("로그인/간편가입 실패:", err);
         }
       };
-      
-      // 모바일 환경이면 카카오톡 앱 로그인 시도
-      if (isMobile()) {
-        options.throughTalk = true;
-      }
-      
       Kakao.Auth.login(options);
     }
   </script>
-
   <style>
-    /* 전체 페이지 기본 스타일 */
     html, body {
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
+      background: white;
+      text-align: center;
     }
-
-    /* body에 가로 중앙 정렬을 적용 */
-    body {
-      text-align: center; /* 가로 중앙 정렬 */
-      background: #f4f4f4; /* 임의 배경색 (선택) */
-    }
-
-    /* 카카오 간편가입 버튼 스타일 */
     #kakaoSignupBtn {
-      background-color: #FEE500; /* 카카오 노란색 */
+      background-color: #FEE500;
       border: none;
       border-radius: 4px;
       color: #000;
@@ -61,22 +37,18 @@
       font-size: 14px;
       padding: 10px 20px;
       cursor: pointer;
-      display: inline-flex;    /* 로고와 텍스트를 한 줄로 배치 */
-      align-items: center;     /* 수직 가운데 정렬 */
-      margin-top: 0px;        /* 상단 여백 조절: 필요에 따라 값 변경 */
+      display: inline-flex;
+      align-items: center;
+      margin-top: 0; /* 상단 여백 최소화 */
     }
-
-    /* 버튼 내 로고 이미지 스타일 */
     #kakaoSignupBtn img {
-      height: 24px;      /* 로고 크기 조절 */
-      margin-right: 8px; /* 로고와 텍스트 간격 */
+      height: 24px;
+      margin-right: 8px;
     }
   </style>
 </head>
 <body>
-  <!-- 상단 중앙에 위치한 카카오 간편가입 버튼 -->
   <button id="kakaoSignupBtn" onclick="loginWithKakao()">
-    <!-- 사용자가 제공한 GitHub 이미지 URL -->
     <img src="https://github.com/jayhaja/act_now_korea_join/blob/main/unnamed.png?raw=true" alt="카카오 로고">
     카카오 간편가입
   </button>
