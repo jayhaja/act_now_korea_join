@@ -2,7 +2,6 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 로그인 예제</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
   <script>
@@ -35,7 +34,6 @@
   </script>
 </head>
 <body>
-  <h1>카카오 로그인 예제</h1>
   <!-- 카카오 로그인 버튼 -->
   <button onclick="loginWithKakao()">카카오 로그인</button>
   <!-- 로그인 후 사용자 정보를 표시할 영역 -->
