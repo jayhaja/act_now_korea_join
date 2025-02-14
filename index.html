@@ -21,7 +21,7 @@
     // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
     function loginWithKakao() {
       var options = {
-        scope: 'profile_nickname, profile_image, account_email, account_gender, account_age_range, account_birthyear, account_phone_number',
+        scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
           // 로그인 성공 후 추가 처리 (예: 사용자 정보 요청)
