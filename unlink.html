@@ -2,32 +2,32 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 로그인 및 탈퇴 기능 예제</title>
-  <!-- Kakao JavaScript SDK (2.7.4) 불러오기 -->
+  <title>카카오 로그인 & 탈퇴 예제</title>
+  <!-- Kakao JavaScript SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
     integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
     crossorigin="anonymous"></script>
   <script>
-    // Kakao SDK 초기화 (JavaScript 키 사용)
-    Kakao.init('c089c8172def97eb00c07217cae17495'); // 실제 JavaScript 키로 교체
+    // 1) Kakao SDK 초기화: JavaScript 키 사용
+    Kakao.init('여기에_JavaScript_키');
     console.log('Kakao SDK initialized');
 
-    // 로그인 함수
+    // 2) 로그인 함수
     function loginWithKakao() {
       Kakao.Auth.login({
         scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인 성공:", authObj);
-          alert("로그인에 성공했습니다.");
+          alert("로그인 성공");
         },
         fail: function(err) {
           console.error("로그인 실패:", err);
-          alert("로그인에 실패했습니다.");
+          alert("로그인 실패");
         }
       });
     }
 
-    // 탈퇴 함수
+    // 3) 탈퇴(연결 해제) 함수
     function unlinkApp() {
       var token = Kakao.Auth.getAccessToken();
       console.log("현재 토큰:", token);
@@ -44,20 +44,19 @@
         url: '/v1/user/unlink'
       })
       .then(function(res) {
-        alert('탈퇴가 완료되었습니다.');
-        console.log('Redirecting to homepage...');
+        alert("탈퇴가 완료되었습니다.");
+        // 리다이렉트
         window.location.href = "https://sites.google.com/view/actnowkorea";
       })
       .catch(function(err) {
-        alert('탈퇴 실패: ' + JSON.stringify(err));
+        alert("탈퇴 실패: " + JSON.stringify(err));
         console.error("탈퇴 요청 오류:", err);
       });
     }
   </script>
   <style>
     html, body {
-      margin: 0;
-      padding: 0;
+      margin: 0; padding: 0;
       background: #fff;
       font-family: sans-serif;
       text-align: center;
@@ -71,13 +70,12 @@
       font-size: 16px;
       cursor: pointer;
       margin-top: 20px;
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
-  <!-- 로그인 버튼 -->
   <button class="api-btn" onclick="loginWithKakao()">카카오 로그인</button>
-  <!-- 탈퇴 버튼 -->
   <button class="api-btn" onclick="unlinkApp()">앱 탈퇴하기</button>
 </body>
 </html>
