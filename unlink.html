@@ -2,19 +2,15 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 앱 탈퇴 기능</title>
-  <!-- Kakao JavaScript SDK (2.7.4) 불러오기 -->
+  <title>카카오 앱 탈퇴 기능 예제</title>
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
     integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
     crossorigin="anonymous"></script>
   <script>
-    // Kakao SDK 초기화 (JavaScript 키 사용)
-    Kakao.init('c089c8172def97eb00c07217cae17495'); // 실제 JavaScript 키로 교체
+    Kakao.init('c089c8172def97eb00c07217cae17495');
     console.log('Kakao SDK initialized');
 
-    // 탈퇴(연결 해제) 함수
     function unlinkApp() {
-      // 탈퇴 전에 사용자 확인
       if (!confirm("정말로 탈퇴하시겠습니까?")) {
         return;
       }
@@ -25,8 +21,12 @@
       })
       .then(function(res) {
         alert('탈퇴가 완료되었습니다.');
-        // 탈퇴 후 페이지 이동 (원하는 URL로 교체 가능)
-        window.location.href = "https://sites.google.com/view/actnowkorea";
+        // 부모 창으로 리다이렉션 (iframe 내부면 부모 창 이동)
+        if (window.top !== window) {
+          window.top.location.href = "https://sites.google.com/view/actnowkorea";
+        } else {
+          window.location.href = "https://sites.google.com/view/actnowkorea";
+        }
       })
       .catch(function(err) {
         alert('탈퇴 실패: ' + JSON.stringify(err));
@@ -35,7 +35,6 @@
     }
   </script>
   <style>
-    /* 전체 페이지 마진 제거 */
     html, body {
       margin: 0;
       padding: 0;
@@ -43,21 +42,19 @@
       font-family: sans-serif;
       text-align: center;
     }
-    /* 탈퇴 버튼 스타일 (마진 0) */
     .api-btn {
-      background-color: #FF6F61; /* 붉은색 계열 */
+      background-color: #FF6F61;
       color: #fff;
       border: none;
       border-radius: 4px;
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
-      margin: 0; /* 마진 0으로 설정 */
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <!-- 탈퇴 버튼: 페이지 최상단에 배치, 마진 0 -->
   <button class="api-btn" onclick="unlinkApp()">앱 탈퇴하기</button>
 </body>
 </html>
