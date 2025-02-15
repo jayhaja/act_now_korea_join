@@ -2,60 +2,59 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 로그인 및 회원탈퇴 통합 예제</title>
+  <title>로그인 후 회원탈퇴 (강제 재로그인 방식)</title>
   <!-- 최신 Kakao JavaScript SDK 불러오기 -->
   <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
   <script>
-    // 1. Kakao SDK 초기화 (웹용 JavaScript 키 사용)
-    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); // 반드시 JavaScript 키를 사용하세요.
+    // Kakao SDK 초기화 (웹용 JavaScript 키 사용)
+    Kakao.init('90ed090fa6d7044e65e276410a0232d7'); 
     console.log('Kakao SDK initialized');
 
-    // 2. 로그인 및 회원탈퇴를 하나의 버튼으로 처리하는 함수
+    // 로그인 + 탈퇴를 하나의 버튼으로 처리하는 함수 (강제 로그아웃 후 재로그인)
     function combinedLoginAndUnlink() {
-      var token = Kakao.Auth.getAccessToken();
-      console.log("현재 토큰:", token);
-
-      // 토큰이 없으면 로그인 진행
-      if (!token) {
+      // 먼저 기존 토큰이 있다면 강제 로그아웃 시도
+      Kakao.Auth.logout(function() {
+        console.log("기존 토큰 로그아웃 완료");
+        // 재로그인을 진행하여 새 토큰을 발급받음
         Kakao.Auth.loginForm({
           scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
           success: function(authObj) {
             console.log("로그인 성공:", authObj);
-            // 로그인 성공 후, 토큰 재확인
-            token = Kakao.Auth.getAccessToken();
-            console.log("로그인 후 토큰:", token);
-            if (token) {
-              proceedToUnlink();
-            } else {
+            var token = Kakao.Auth.getAccessToken();
+            console.log("새로운 토큰:", token);
+            if (!token) {
               alert("로그인 후에도 토큰이 확인되지 않습니다.");
+              return;
             }
+            // 새 토큰이 확보되면 탈퇴 API 호출
+            proceedToUnlink();
           },
           fail: function(err) {
             console.error("로그인 실패:", err);
             alert("로그인 실패: " + JSON.stringify(err));
           }
         });
-      } else {
-        // 이미 로그인 상태면 바로 탈퇴 진행
-        proceedToUnlink();
-      }
+      });
     }
 
-    // 3. 회원탈퇴(연결 해제) 함수
+    // 회원탈퇴(연결 해제) 함수
     function proceedToUnlink() {
       if (!confirm("회원탈퇴 하시겠습니까?")) {
         return;
       }
       
-      // 탈퇴 API 호출 (POST 방식은 SDK 내부에서 처리됨)
       Kakao.API.request({
         url: '/v1/user/unlink'
       })
       .then(function(res) {
-        console.log("회원탈퇴 성공:", res);
         alert("회원탈퇴가 완료되었습니다.");
-        // 탈퇴 후 원하는 URL로 리다이렉션 (예: Google Sites의 홈페이지)
-        window.location.href = "https://sites.google.com/view/actnowkorea";
+        console.log("리다이렉션 진행...");
+        // 탈퇴 후 홈페이지로 리다이렉션 (부모 창 이동)
+        if (window.top !== window) {
+          window.top.location.href = "https://sites.google.com/view/actnowkorea";
+        } else {
+          window.location.href = "https://sites.google.com/view/actnowkorea";
+        }
       })
       .catch(function(err) {
         console.error("회원탈퇴 요청 오류:", err);
@@ -65,7 +64,7 @@
   </script>
   <style>
     html, body {
-      margin: 0;
+      margin: 0; 
       padding: 0;
       background: #fff;
       font-family: sans-serif;
@@ -84,7 +83,7 @@
   </style>
 </head>
 <body>
-  <!-- 하나의 버튼으로 로그인 후 회원탈퇴를 처리 -->
+  <!-- 하나의 버튼으로 로그인(강제 재로그인) 후 회원탈퇴를 처리 -->
   <button class="api-btn" onclick="combinedLoginAndUnlink()">로그인 후 회원탈퇴</button>
 </body>
 </html>
