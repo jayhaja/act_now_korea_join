@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <title>카카오 앱 탈퇴 기능 예제</title>
+  <!-- Kakao JavaScript SDK (2.7.4) 불러오기 -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
     integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
     crossorigin="anonymous"></script>
   <script>
-    Kakao.init('c089c8172def97eb00c07217cae17495');
+    // Kakao SDK 초기화 (실제 사용하려는 앱의 JavaScript 키 입력)
+    Kakao.init('c089c8172def97eb00c07217cae17495'); // 실제 JavaScript 키로 교체
     console.log('Kakao SDK initialized');
 
     function unlinkApp() {
@@ -15,13 +17,14 @@
         return;
       }
       
+      // "method" 옵션을 제거합니다.
       Kakao.API.request({
-        url: '/v1/user/unlink',
-        method: 'POST'
+        url: '/v1/user/unlink'
       })
       .then(function(res) {
         alert('탈퇴가 완료되었습니다.');
-        // 부모 창으로 리다이렉션 (iframe 내부면 부모 창 이동)
+        console.log('Redirecting to homepage...');
+        // 부모 창으로 리다이렉션 (임베드 환경에서도 새 창 열기)
         if (window.top !== window) {
           window.top.location.href = "https://sites.google.com/view/actnowkorea";
         } else {
