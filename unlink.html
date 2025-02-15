@@ -2,18 +2,18 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>카카오 로그인 & 탈퇴 예제</title>
-  <!-- Kakao JavaScript SDK -->
+  <title>카카오 로그인 (loginForm) & 탈퇴 예제</title>
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
     integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
     crossorigin="anonymous"></script>
   <script>
-    // 올바른 JavaScript 키를 넣어야 함
+    // JavaScript 키 사용
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
     console.log('Kakao SDK initialized');
 
+    // 로그인 (팝업) 함수
     function loginWithKakao() {
-      Kakao.Auth.login({
+      Kakao.Auth.loginForm({
         scope: 'profile_nickname, profile_image, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인 성공:", authObj);
@@ -26,21 +26,27 @@
       });
     }
 
+    // 탈퇴 함수
     function unlinkApp() {
-      const token = Kakao.Auth.getAccessToken();
+      var token = Kakao.Auth.getAccessToken();
       console.log("현재 토큰:", token);
       if (!token) {
         alert("로그인되어 있지 않습니다. 먼저 로그인 후 탈퇴해 주세요.");
         return;
       }
+      
       if (!confirm("정말로 탈퇴하시겠습니까?")) {
         return;
       }
+
+      // method: 'POST' 지정하지 마세요(자동으로 POST)
       Kakao.API.request({
         url: '/v1/user/unlink'
       })
       .then(function(res) {
         alert("탈퇴가 완료되었습니다.");
+        // 필요 시 리다이렉트
+        window.location.href = "https://sites.google.com/view/actnowkorea";
       })
       .catch(function(err) {
         alert("탈퇴 실패: " + JSON.stringify(err));
