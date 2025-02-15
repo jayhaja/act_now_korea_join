@@ -8,23 +8,30 @@
     integrity="sha384-DKYJZ8NLiK8MN4/C5P2dtSmLQ4KwPaoqAfyA/DfmEc1VDxu4yyC7wy6K1Hs90nka"
     crossorigin="anonymous"></script>
   <script>
-    // Kakao SDK 초기화 (실제 사용하려는 앱의 JavaScript 키 입력)
+    // Kakao SDK 초기화 (JavaScript 키 사용)
     Kakao.init('c089c8172def97eb00c07217cae17495'); // 실제 JavaScript 키로 교체
     console.log('Kakao SDK initialized');
 
     function unlinkApp() {
+      // 먼저 로그인 상태(액세스 토큰 존재 여부) 확인
+      var token = Kakao.Auth.getAccessToken();
+      if (!token) {
+        alert("로그인되어 있지 않습니다. 먼저 로그인 후 탈퇴해 주세요.");
+        return;
+      }
+
+      // 탈퇴 전에 사용자 확인
       if (!confirm("정말로 탈퇴하시겠습니까?")) {
         return;
       }
       
-      // "method" 옵션을 제거합니다.
       Kakao.API.request({
         url: '/v1/user/unlink'
       })
       .then(function(res) {
         alert('탈퇴가 완료되었습니다.');
         console.log('Redirecting to homepage...');
-        // 부모 창으로 리다이렉션 (임베드 환경에서도 새 창 열기)
+        // 부모 창으로 리다이렉션
         if (window.top !== window) {
           window.top.location.href = "https://sites.google.com/view/actnowkorea";
         } else {
