@@ -13,25 +13,27 @@
     console.log('Kakao SDK initialized');
 
     function unlinkApp() {
-      // 먼저 로그인 상태(액세스 토큰 존재 여부) 확인
+      // 먼저 현재 로그인 상태(액세스 토큰 존재 여부) 확인
       var token = Kakao.Auth.getAccessToken();
+      console.log("Current token:", token);
       if (!token) {
         alert("로그인되어 있지 않습니다. 먼저 로그인 후 탈퇴해 주세요.");
         return;
       }
-
-      // 탈퇴 전에 사용자 확인
+      
+      // 사용자 확인
       if (!confirm("정말로 탈퇴하시겠습니까?")) {
         return;
       }
       
+      // 탈퇴 요청 (method 옵션 없이 기본 POST 방식 사용)
       Kakao.API.request({
         url: '/v1/user/unlink'
       })
       .then(function(res) {
         alert('탈퇴가 완료되었습니다.');
         console.log('Redirecting to homepage...');
-        // 부모 창으로 리다이렉션
+        // 새 창 또는 부모 창으로 리다이렉션 시도
         if (window.top !== window) {
           window.top.location.href = "https://sites.google.com/view/actnowkorea";
         } else {
