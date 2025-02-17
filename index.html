@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Kakao 간편가입 (JavaScript SDK)</title>
   <!-- Kakao JavaScript SDK 불러오기 -->
-  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
   <script>
     // Kakao SDK 초기화: JavaScript 키 사용 (실제 키와 일치해야 함)
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
@@ -31,7 +31,10 @@
             url: '/v2/user/me',
             success: function(res) {
               console.log("사용자 정보:", res);
+              // 가입 완료 메시지 표시
               document.getElementById('result').innerHTML = "가입이 완료되었습니다.";
+              // 백엔드로 사용자 정보 전송 (아래 함수 호출)
+              sendUserInfoToServer(res);
             },
             fail: function(error) {
               console.error("사용자 정보 요청 실패:", error);
@@ -45,14 +48,33 @@
 
       // 웹 기반 간편가입을 원하면 모바일에서도 throughTalk 옵션을 사용하지 않습니다.
       // (네이티브 앱을 통한 로그인을 원한다면 아래 조건을 활성화하세요.)
-       if (isMobile()) {
-         console.log('Mobile device detected');
-         options.throughTalk = true;
-       } else {
-         console.log('Non-mobile device detected');
-       }
+      if (isMobile()) {
+        console.log('Mobile device detected');
+        options.throughTalk = true;
+      } else {
+        console.log('Non-mobile device detected');
+      }
       
       Kakao.Auth.login(options);
+    }
+
+    // 사용자 정보를 백엔드로 전송하는 함수
+    function sendUserInfoToServer(userInfo) {
+      fetch('https://www.gjsqjqrowjd.xyz/api/registerKakaoUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userInfo)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("서버 응답:", data);
+      })
+      .catch(error => {
+        console.error("서버 전송 오류:", error);
+        alert("회원가입에 실패했습니다.");
+      });
     }
   </script>
   <style>
