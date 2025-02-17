@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Kakao 간편가입 (JavaScript SDK)</title>
-  <!-- Kakao JavaScript SDK 불러오기 -->
-  <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+  <!-- 최신 Kakao JavaScript SDK (redirect or loginForm) -->
+  <script src="https://developers.kakao.com/sdk/js/kakao.min.js"></script>
   <script>
     // Kakao SDK 초기화: JavaScript 키 사용 (실제 키와 일치해야 함)
     Kakao.init('90ed090fa6d7044e65e276410a0232d7');
@@ -21,8 +21,9 @@
     // 카카오 로그인/간편가입 함수 (로그인 팝업 호출)
     function loginWithKakao() {
       console.log('loginWithKakao function called');
+
+      // 최신 SDK에서는 Kakao.Auth.login() 대신 Kakao.Auth.loginForm() 사용
       var options = {
-        // 요청 동의 항목 (Kakao Developers 콘솔에 등록한 항목과 일치)
         scope: 'profile_nickname, account_email, gender, age_range, birthyear, phone_number',
         success: function(authObj) {
           console.log("로그인/간편가입 성공:", authObj);
@@ -43,16 +44,17 @@
         }
       };
 
-      // 웹 기반 간편가입을 원하면 모바일에서도 throughTalk 옵션을 사용하지 않습니다.
-      // (네이티브 앱을 통한 로그인을 원한다면 아래 조건을 활성화하세요.)
-       if (isMobile()) {
-         console.log('Mobile device detected');
-         options.throughTalk = true;
-       } else {
-         console.log('Non-mobile device detected');
-       }
-      
-      Kakao.Auth.login(options);
+      // 만약 모바일 기기에서 카카오톡 앱을 통한 네이티브 로그인을 원한다면, 아래 코드 활성화
+      // 최신 SDK에서도 throughTalk 옵션은 가능하나, 팝업 방식과 겹칠 수 있으므로 주의
+      if (isMobile()) {
+        console.log('Mobile device detected');
+        options.throughTalk = true;
+      } else {
+        console.log('Non-mobile device detected');
+      }
+
+      // 최신 SDK에서는 loginForm() 사용
+      Kakao.Auth.loginForm(options);
     }
   </script>
   <style>
