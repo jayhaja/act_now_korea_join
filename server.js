@@ -2,10 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-<<<<<<< HEAD
-=======
 
->>>>>>> 41bf66f (Initial commit for deployment)
 const app = express();
 
 // CORS 미들웨어 추가: 모든 도메인을 허용 (모든 OPTIONS 요청 처리)
@@ -15,8 +12,8 @@ app.options('*', cors());
 // JSON 요청 파싱 미들웨어
 app.use(bodyParser.json());
 
-// MongoDB 연결
-mongoose.connect('mongodb://localhost:27017/kakaoUsers', {
+// MongoDB 연결 (환경변수가 있으면 사용하고, 없으면 로컬 연결)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kakaoUsers', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -27,7 +24,7 @@ mongoose.connect('mongodb://localhost:27017/kakaoUsers', {
   console.error("MongoDB 연결 오류:", err);
 });
 
-// 사용자 스키마 정의
+// 사용자 스키마 정의 (카카오 로그인으로 받은 정보를 저장)
 const userSchema = new mongoose.Schema({
   id: { type: String, unique: true },
   profile_nickname: String,
@@ -40,7 +37,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// API 엔드포인트
+// API 엔드포인트: 프론트엔드에서 전달받은 사용자 정보를 MongoDB에 저장
 app.post('/api/registerKakaoUser', async (req, res) => {
   try {
     const kakaoUser = req.body;
@@ -69,11 +66,8 @@ app.post('/api/registerKakaoUser', async (req, res) => {
   }
 });
 
+// 서버 시작 (환경변수 PORT 사용, 없으면 3000번 포트)
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> 41bf66f (Initial commit for deployment)
