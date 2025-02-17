@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
 const app = express();
 
 // CORS 미들웨어 추가: 모든 도메인을 허용 (모든 OPTIONS 요청 처리)
