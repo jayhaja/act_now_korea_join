@@ -13,10 +13,7 @@ app.options('*', cors());
 app.use(bodyParser.json());
 
 // MongoDB 연결 (환경변수가 있으면 사용하고, 없으면 로컬 연결)
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kakaoUsers', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/kakaoUsers')
 .then(() => {
   console.log("MongoDB 연결 성공");
 })
