@@ -1,9 +1,14 @@
 {
   "name": "kakao-backend",
   "version": "1.0.0",
+<<<<<<< HEAD
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+=======
+  "main": "index.js",
+  "scripts": {
+>>>>>>> 41bf66f (Initial commit for deployment)
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

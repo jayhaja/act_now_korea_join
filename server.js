@@ -2,6 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+<<<<<<< HEAD
+=======
+
+>>>>>>> 41bf66f (Initial commit for deployment)
 const app = express();
 
 // CORS 미들웨어 추가: 모든 도메인을 허용 (모든 OPTIONS 요청 처리)
@@ -68,4 +72,8 @@ app.post('/api/registerKakaoUser', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 41bf66f (Initial commit for deployment)
